@@ -1,0 +1,63 @@
+<% include ./header.ejs %>
+<div class="col-md-offset-2 col-md-8">
+    <!-- include comes here-->
+    <script>
+        $(function () {
+            $("#msg").focus();
+            var socket = io();
+            $('#form-chat').submit(function(){
+
+                var user = "<%=user%>";
+
+                socket.emit('chat message', {msg : $('#msg').val(), user: user });
+                return false;
+            });
+
+            socket.on('chat message', function(chat){
+                console.log(chat)
+                var html_e = "<div class='post odd'>" +
+                    "<p>"+chat.msg+"</p>" +
+                    "<div class='time'>"
+                        <%var time = new Date().toLocaleString()%>
+                    +" <%= time %>"
+                    +"</div>"
+                    +"<div class='author'>"+
+                    "Posted By @"+ chat.user
+                    +"</div>" +
+                    "</div>"
+                //console.log(html_e)
+                $('#msg').val("");
+                $("#msg").focus();
+
+
+                $('.chatBox').append(html_e);
+                var divq = $(".chatBox");
+                divq.scrollTop(divq.prop('scrollHeight'));
+            });
+        });
+    </script>
+
+    <!--Show only if authorised-->
+
+    <div class="chat-container">
+
+        <div class="chatBox">
+
+        </div>
+
+        <form action="#" id="form-chat">
+                <h4>
+                </h4>
+            <textarea id="msg" required class="form-control" maxlength="200" rows="3" placeholder="Say something"
+                      name="text"></textarea>
+            <input class="btn submit-btn pull-right" type="submit" value="Send!"/>
+        </form>
+
+
+    </div>
+    <script>
+
+
+    </script>
+    </body>
+    </html>
